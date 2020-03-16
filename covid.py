@@ -1,6 +1,7 @@
 import csv
 import time
 import datetime
+import os
 
 from influxdb import InfluxDBClient
 
@@ -146,6 +147,26 @@ print(dataDeaths)
 print("Sending to Influxdb....")
 
 client = InfluxDBClient(host='148.251.91.243', port=8086)
-client.write_points(data, database='covid19_test', batch_size=10000, protocol='line')
+client.write_points(dataConfirmed, database='covid19_test', batch_size=10000, protocol='line')
+client.write_points(dataRecovered, database='covid19_test', batch_size=10000, protocol='line')
+client.write_points(dataDeaths, database='covid19_test', batch_size=10000, protocol='line')
 
 print("Sent Data!")
+print("Clean Up CSV Files.")
+
+if os.path.exists("time_series_19-covid-Confirmed.csv"):
+	os.remove("time_series_19-covid-Confirmed.csv")
+else:
+	print("The file does not exist") 
+
+if os.path.exists("time_series_19-covid-Deaths.csv"):
+	os.remove("time_series_19-covid-Deaths.csv")
+else:
+	print("The file does not exist") 
+
+if os.path.exists("time_series_19-covid-Recovered.csv"):
+	os.remove("time_series_19-covid-Recovered.csv")
+else:
+	print("The file does not exist") 
+
+print("Done Cleaning!") 
